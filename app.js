@@ -27,7 +27,7 @@ function promptUser(){
     {
         type: "list",
         message: "What is your role?",
-        choices: ["manager, engineer, intern"],
+        choices: ["Manager, Engineer, Intern"],
         name: "title"
     }
     ]);
@@ -70,11 +70,11 @@ promptUser()
         this.id = id;
         this.title = title;
 
-        if (title === "manager"){
+        if (title === "Manager"){
             return managerQuestion();
-        } else if (title === "engineer"){
+        } else if (title === "Engineer"){
             return engineerQuestion();
-        } else if (title === "intern"){
+        } else if (title === "Intern"){
             return internQuestion();
         }
-    })
+    });
