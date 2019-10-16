@@ -3,6 +3,7 @@ const employee = require("./lib/employee");
 const engineer = require ("./lib/engineer");
 const intern = require ("./lib/intern");
 const manager = require ("./lib/manager");
+const outputPath = path.resolve(_dirname, "output", "main.html");
 
 const inquirer = require ("inquirer");
 
@@ -129,7 +130,6 @@ function engineerQuestion (){
 
 promptUser()
     .then(function({name, id, email, officenumber, employee}){
-
         this.name = name;
         this.email = email;
         this.id = id;
@@ -144,3 +144,41 @@ promptUser()
             console.log(employee);
         }
     });
+
+
+// appending data to html
+// manager card
+`<div class="card text-white mb-3" style="max-width: 18rem;">
+  <div class="card-header bg-primary">${name}${title}</div>
+  <div class="card-body">
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">${id}</li>
+    <li class="list-group-item">${email}</li>
+    <li class="list-group-item">${officenumber}</li>
+</ul>
+  </div>
+</div>`
+
+// engineer card
+`<div class="card text-white mb-3" style="max-width: 18rem;">
+  <div class="card-header bg-primary">${name}${title}</div>
+  <div class="card-body">
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">${id}</li>
+    <li class="list-group-item">${email}</li>
+    <li class="list-group-item">${github}</li>
+</ul>
+  </div>
+</div>`
+
+// intern card
+`<div class="card text-white mb-3" style="max-width: 18rem;">
+  <div class="card-header bg-primary">${name}${title}</div>
+  <div class="card-body">
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">${id}</li>
+    <li class="list-group-item">${email}</li>
+    <li class="list-group-item">${school}</li>
+</ul>
+  </div>
+</div>`
