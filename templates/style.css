@@ -1,0 +1,11 @@
+body {
+    background-image: url("./abstract.jpg");
+}
+
+#navcolor {
+    background-color: azure;
+}
+
+.list-group-item {
+    color: black;
+}
