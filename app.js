@@ -27,24 +27,24 @@ function managerQuestion(){
             type: "input",
             message: "What is the Manager's name?",
             name: "name",
-            validate: function validateManager(name) {
-                return name !== '';
+            validate: function (name) {
+                return name.length > 0;
             }
         },
         {
             type: "input",
             message: "What is the manager's ID?",
             name: "id",
-            validate: function validateID(name) {
-                return name !== '';
+            validate: function (name) {
+                return name.length > 0;
             }
         },
         {
             type: "input",
             message: "What is the manager's email?",
             name: "email",
-            validate: function validateEmail(name) {
-                return name !== '';
+            validate: function (name) {
+                return name.includes("@");
             }
         },
         {
@@ -52,7 +52,7 @@ function managerQuestion(){
             message: "What is the manager's office number?",
             name: "officenumber",
             validate: function validateOfficeNum(name) {
-                return name !== '';
+                return name.length > 0;
             }
         },
         {
@@ -66,21 +66,25 @@ function managerQuestion(){
         this.employee = employee;
 
         const newManager = new Manager (name, id, email, officenumber);
+        console.log(newManager);
         managerArr.push(newManager);
-
-        if (employee === "Engineer"){
-            return engineerQuestion();
-        } else if (employee === "Intern"){
-            return internQuestion();
-        } else {
-            console.log(managerArr);
-            console.log(internArr);
-            console.log(engineerArr);
-            return teamReady();
-        }
-    
+        
+            // managerHtml.append(managerDiv);
+        
+            if (employee === "Engineer"){
+                return engineerQuestion();
+            } else if (employee === "Intern"){
+                return internQuestion();
+            } else {
+                // console.log(internArr);
+                // console.log(engineerArr);
+                return teamReady();
+        };
     })
-}
+    .catch(function(err){
+        console.log(err);
+    });
+};
 
 function internQuestion (){
     return inquirer.prompt([
@@ -137,8 +141,10 @@ function internQuestion (){
                 console.log(engineerArr);                
                 return teamReady();
             }
+        })
+        .catch(function(err){
+            console.log(err);
         });
-        
 };
 
 function engineerQuestion (){
@@ -195,6 +201,9 @@ function engineerQuestion (){
                 return teamReady();
                 
             }
+        })
+        .catch(function(err){
+            console.log(err);
         });
 };
 
@@ -211,11 +220,14 @@ promptUser()
             return managerQuestion();
         }
         
+    })
+    .catch(function(err){
+        console.log(err);
     });
 
 
-function generateHTML(){
-    `<!DOCTYPE html>
+function generateHTML(managerDiv){
+    return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -232,7 +244,7 @@ function generateHTML(){
   </div>
 <div class="container">
 
-<div class="row" id="manager"></div>
+<div class="row" id="manager">${managerDiv}</div>
 <div class="row" id="engineer"></div>
 <div class="row" id="intern"></div>
 
@@ -242,26 +254,6 @@ function generateHTML(){
 </html>`
 }
 
-// appending data to html
-function managerCard(managerArr){
-    let managerHtml = $("#manager");
-
-    let managerDiv = `<div class="card text-white mb-3" style="max-width: 18rem;">
-    <div class="card-header bg-primary">
-        <p>${name}</p
-        <p>${employee}</p>
-    </div>
-    <div class="card-body">
-    <ul class="list-group list-group-flush">
-    <li class="list-group-item">${id}</li>
-    <li class="list-group-item">${email}</li>
-    <li class="list-group-item">${officenumber}</li>
-    </ul>
-    </div>
-    </div>`;
-
-    managerHtml.append(managerDiv);
-};
 
 // engineer card
 function engineerCard(engineerArr){
@@ -307,19 +299,34 @@ function internCard(internArr){
     internHtml.append(internDiv);
 
 };
-
-
-// make an array to push into it after every input
-// sort array to different jobs 
+ 
 
 function teamReady (){
-    let html = generateHTML();
-fs.writeFile("main.html", html, function(err){
+        let managerDiv = managerArr.map(newManager => `<div class="card text-white mb-3" style="max-width: 18rem;">
+        <div class="card-header bg-primary">
+            <p>Name:${newManager.name}</p
+            <p>Manager</p>
+        </div>
+        <div class="card-body">
+        <ul class="list-group list-group-flush">
+        <li class="list-group-item">ID:${newManager.id}</li>
+        <li class="list-group-item">Email:${newManager.email}</li>
+        <li class="list-group-item">Office #:${newManager.officenumber}</li>
+        </ul>
+        </div>
+        </div>`);
+
+
+    let html = generateHTML(managerDiv);
+    fs.writeFile("main.html", html, function(err){
     // const outputPath = path.resolve('./output', "output", "main.html");
     if (err){
         throw err
     };
     console.log("Your team is ready!");
+    // console.log(JSON.stringify(engineerArr));
+    // console.log(engineerArr[1].getName());
+
 });
 
 };
