@@ -226,7 +226,7 @@ promptUser()
     });
 
 
-function generateHTML(managerDiv){
+function generateHTML(managerDiv, engineerDiv, internDiv){
     return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -245,79 +245,67 @@ function generateHTML(managerDiv){
 <div class="container">
 
 <div class="row" id="manager">${managerDiv}</div>
-<div class="row" id="engineer"></div>
-<div class="row" id="intern"></div>
+<div class="row" id="engineer">${engineerDiv}</div>
+<div class="row" id="intern">${internDiv}</div>
 
 </div>
 
 </body>
 </html>`
 }
-
-
-// engineer card
-function engineerCard(engineerArr){
-    let engineerHtml = $("#engineer");
-
-    let engineerDiv = 
-    `<div class="card text-white mb-3" style="max-width: 18rem;">
-    <div class="card-header bg-primary">
-        <p>${name}</p
-        <p>${employee}</p>
-    </div>
-    <div class="card-body">
-    <ul class="list-group list-group-flush">
-    <li class="list-group-item">${id}</li>
-    <li class="list-group-item">${email}</li>
-    <li class="list-group-item">${github}</li>
-    </ul>
-    </div>
-    </div>`;
-
-    engineerHtml.append(engineerDiv);
-};
-
-// intern card
-function internCard(internArr){
-    let internHtml = $("#intern");
-
-    let internDiv =
-    `<div class="card text-white mb-3" style="max-width: 18rem;">
-    <div class="card-header bg-primary">
-        <p>${name}</p
-        <p>${employee}</p>
-    </div>
-    <div class="card-body">
-    <ul class="list-group list-group-flush">
-    <li class="list-group-item">${id}</li>
-    <li class="list-group-item">${email}</li>
-    <li class="list-group-item">${school}</li>
-    </ul>
-    </div>
-    </div>`;
-
-    internHtml.append(internDiv);
-
-};
  
 
 function teamReady (){
-        let managerDiv = managerArr.map(newManager => `<div class="card text-white mb-3" style="max-width: 18rem;">
-        <div class="card-header bg-primary">
-            <p>Name:${newManager.name}</p
-            <p>Manager</p>
-        </div>
-        <div class="card-body">
-        <ul class="list-group list-group-flush">
-        <li class="list-group-item">ID:${newManager.id}</li>
-        <li class="list-group-item">Email:${newManager.email}</li>
-        <li class="list-group-item">Office #:${newManager.officenumber}</li>
-        </ul>
-        </div>
-        </div>`);
+    // manager card
+    let managerDiv = managerArr.map(newManager => 
+    `<div class="card text-white mb-3" style="max-width: 18rem;">
+    <div class="card-header bg-primary">
+        <p>Name:${newManager.name}</p
+        <p>Manager</p>
+    </div>
+    <div class="card-body">
+    <ul class="list-group list-group-flush">
+    <li class="list-group-item">ID:${newManager.id}</li>
+    <li class="list-group-item">Email:${newManager.email}</li>
+    <li class="list-group-item">Office #:${newManager.officenumber}</li>
+    </ul>
+    </div>
+    </div>`);
+
+    // engineer card
+    let engineerDiv = engineerArr.map(newEngineer =>
+    `<div class="card text-white mb-3" style="max-width: 18rem;">
+    <div class="card-header bg-primary">
+        <p>Name:${newEngineer.name}</p
+        <p>Manager</p>
+    </div>
+    <div class="card-body">
+    <ul class="list-group list-group-flush">
+    <li class="list-group-item">ID:${newEngineer.id}</li>
+    <li class="list-group-item">Email:${newEngineer.email}</li>
+    <li class="list-group-item">Office #:${newEngineer.github}</li>
+    </ul>
+    </div>
+    </div>`);
+
+    // intern card
+    let internDiv = internArr.map(newIntern =>
+    `<div class="card text-white mb-3" style="max-width: 18rem;">
+    <div class="card-header bg-primary">
+        <p>Name:${newIntern.name}</p
+        <p>Manager</p>
+    </div>
+    <div class="card-body">
+    <ul class="list-group list-group-flush">
+    <li class="list-group-item">ID:${newIntern.id}</li>
+    <li class="list-group-item">Email:${newIntern.email}</li>
+    <li class="list-group-item">Office #:${newIntern.school}</li>
+    </ul>
+    </div>
+    </div>`);
 
 
-    let html = generateHTML(managerDiv);
+    let html = generateHTML(managerDiv, engineerDiv, internDiv);
     fs.writeFile("main.html", html, function(err){
     // const outputPath = path.resolve('./output', "output", "main.html");
     if (err){
