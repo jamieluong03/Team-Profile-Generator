@@ -73,6 +73,9 @@ function managerQuestion(){
         } else if (employee === "Intern"){
             return internQuestion();
         } else {
+            console.log(managerArr);
+            console.log(internArr);
+            console.log(engineerArr);
             return teamReady();
         }
     
@@ -117,7 +120,7 @@ function internQuestion (){
             name: "employee",
         }
     ])
-        .then(function (name, id, email, school, employee){
+        .then(function ({name, id, email, school, employee}){
             // console.log({name, id, email, school, employee});
             this.employee = employee;
 
@@ -129,6 +132,9 @@ function internQuestion (){
             } else if (employee === "Intern"){
                 return internQuestion();
             } else {
+                console.log(managerArr);
+                console.log(internArr);
+                console.log(engineerArr);                
                 return teamReady();
             }
         });
@@ -183,9 +189,11 @@ function engineerQuestion (){
             } else if (employee === "Intern"){
                 return internQuestion();
             } else {
-                
-                console.log(engineerArr);
                 console.log(managerArr);
+                console.log(internArr);
+                console.log(engineerArr);
+                return teamReady();
+                
             }
         });
 };
@@ -235,7 +243,7 @@ function generateHTML(){
 }
 
 // appending data to html
-function managerCard({data}){
+function managerCard(managerArr){
     let managerHtml = $("#manager");
 
     let managerDiv = `<div class="card text-white mb-3" style="max-width: 18rem;">
@@ -256,7 +264,7 @@ function managerCard({data}){
 };
 
 // engineer card
-function engineerCard({data}){
+function engineerCard(engineerArr){
     let engineerHtml = $("#engineer");
 
     let engineerDiv = 
@@ -278,7 +286,7 @@ function engineerCard({data}){
 };
 
 // intern card
-function internCard(){
+function internCard(internArr){
     let internHtml = $("#intern");
 
     let internDiv =
@@ -297,6 +305,7 @@ function internCard(){
     </div>`;
 
     internHtml.append(internDiv);
+
 };
 
 
@@ -306,7 +315,7 @@ function internCard(){
 function teamReady (){
     let html = generateHTML();
 fs.writeFile("main.html", html, function(err){
-    const outputPath = path.resolve('./output', "output", "main.html");
+    // const outputPath = path.resolve('./output', "output", "main.html");
     if (err){
         throw err
     };
