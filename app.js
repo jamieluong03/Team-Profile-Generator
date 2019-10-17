@@ -1,11 +1,13 @@
 const fs = require("fs");
 const employee = require("./lib/employee");
-const engineer = require ("./lib/engineer");
-const intern = require ("./lib/intern");
-const manager = require ("./lib/manager");
-// const outputPath = path.resolve(_dirname, "output", "main.html");
-
+const Engineer = require ("./lib/engineer");
+const Intern = require ("./lib/intern");
+const Manager = require ("./lib/manager");
 const inquirer = require ("inquirer");
+
+let managerArr = [];
+let internArr = [];
+let engineerArr = [];
 
 function promptUser(){
     return inquirer.prompt([
@@ -61,13 +63,17 @@ function managerQuestion(){
         }  
     ])
     .then(function({name, id, email, officenumber, employee}){
+        this.employee = employee;
+
+        const newManager = new Manager ({name, id, email, officenumber});
+        managerArr.push(newManager);
+
         if (employee === "Engineer"){
             return engineerQuestion();
         } else if (employee === "Intern"){
             return internQuestion();
-        } else {
-            return managerCard({name, id, email, officenumber, employee});
-    };
+        }
+    
     })
 }
 
@@ -109,16 +115,18 @@ function internQuestion (){
             name: "employee",
         }
     ])
-        .then(function ({name, id, email, school, employee}){
-            console.log({name, id, email, school, employee});
+        .then(function (name, id, email, school, employee){
+            // console.log({name, id, email, school, employee});
+            this.employee = employee;
+
+            const newIntern = new Intern (name, id, email, school);
+                internArr.push(newIntern);
+
             if (employee === "Engineer"){
                 return engineerQuestion();
             } else if (employee === "Intern"){
                 return internQuestion();
-            } else {
-                return internCard({name, id, email, school, employee});
             }
-
         });
 };
 
@@ -161,14 +169,25 @@ function engineerQuestion (){
         }  
     ])
         .then(function({name, id, email, github, employee}){
-            console.log({name, id, email, github, employee});
-            console.log(name, id, email, github);
+            // console.log({name, id, email, github, employee});
+            // console.log(name, id, email, github);
+            const newEngineer = new Engineer (name, id, email, github);
+                engineerArr.push(newEngineer);
+
+            this.employee = employee;
+
             if (employee === "Engineer"){
                 return engineerQuestion();
             } else if (employee === "Intern"){
                 return internQuestion();
             } else {
-                return engineerCard({name, id, email, github, employee});
+                return;
+                // for (i = 0; i < engineerArr.length; i++){
+                // const newEngineer = new Engineer (name, id, email, github);
+                // engineerArr.push(newEngineer);
+                // console.log(engineerArr);
+                // }
+
             }
         });
 };
@@ -185,8 +204,37 @@ promptUser()
         } else if (employee === "Manager"){
             return managerQuestion();
         }
+        
     });
 
+
+function generateHTML(){
+    `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="./style.css">
+
+</head>
+<body>
+  <div class="jumbotron" id="navcolor">
+      <h1 class="display-4 text-center">My Team</h1>
+  </div>
+<div class="container">
+
+<div class="row" id="manager"></div>
+<div class="row" id="engineer"></div>
+<div class="row" id="intern"></div>
+
+</div>
+
+</body>
+</html>`
+}
 
 // appending data to html
 function managerCard({data}){
@@ -238,3 +286,15 @@ function internCard(){
     </div>
     </div>`
 };
+
+
+// make an array to push into it after every input
+// sort array to different jobs 
+
+fs.writeFile("main.html", generateHTML(), function(err){
+    const outputPath = path.resolve('./output', "output", "main.html");
+    if (err){
+        throw err
+    };
+    console.log("Your team is ready!");
+});
