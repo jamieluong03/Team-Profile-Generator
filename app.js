@@ -13,7 +13,7 @@ function promptUser(){
     return inquirer.prompt([
         {
             type: "list",
-            message: "Please add an employee",
+            message: "Please add a manager first",
             choices: ["Manager", "Engineer", "Intern"],
             name: "employee",
         },
@@ -27,51 +27,53 @@ function managerQuestion(){
             type: "input",
             message: "What is the Manager's name?",
             name: "name",
-            // validate: function validateManager(name) {
-            //     return name !== '';
-            // }
+            validate: function validateManager(name) {
+                return name !== '';
+            }
         },
         {
             type: "input",
             message: "What is the manager's ID?",
             name: "id",
-            // validate: function validateID(name) {
-            //     return name !== '';
-            // }
+            validate: function validateID(name) {
+                return name !== '';
+            }
         },
         {
             type: "input",
             message: "What is the manager's email?",
             name: "email",
-            // validate: function validateEmail(name) {
-            //     return name !== '';
-            // }
+            validate: function validateEmail(name) {
+                return name !== '';
+            }
         },
         {
             type: "input",
             message: "What is the manager's office number?",
             name: "officenumber",
-            // validate: function validateOfficeNum(name) {
-            //     return name !== '';
-            // }
+            validate: function validateOfficeNum(name) {
+                return name !== '';
+            }
         },
         {
             type: "list",
             message: "Would you like to add another employee?",
-            choices: ["Engineer", "Intern", "No, I don't want to add another employee"],
+            choices: ["Engineer", "Intern", "No"],
             name: "employee",
         }  
     ])
     .then(function({name, id, email, officenumber, employee}){
         this.employee = employee;
 
-        const newManager = new Manager ({name, id, email, officenumber});
+        const newManager = new Manager (name, id, email, officenumber);
         managerArr.push(newManager);
 
         if (employee === "Engineer"){
             return engineerQuestion();
         } else if (employee === "Intern"){
             return internQuestion();
+        } else {
+            return teamReady();
         }
     
     })
@@ -83,25 +85,25 @@ function internQuestion (){
             type: "input",
             message: "What is the intern's name?",
             name: "name",
-            // validate: function validateManager(name) {
-            //     return name !== '';
-            // }
+            validate: function validateManager(name) {
+                return name !== '';
+            }
         },
         {
             type: "input",
             message: "What is the intern's ID?",
             name: "id",
-            // validate: function validateID(name) {
-            //     return name !== '';
-            // }
+            validate: function validateID(name) {
+                return name !== '';
+            }
         },
         {
             type: "input",
             message: "What is the intern's email?",
             name: "email",
-            // validate: function validateEmail(name) {
-            //     return name !== '';
-            // }
+            validate: function validateEmail(name) {
+                return name !== '';
+            }
         },
         {
             type: "input",
@@ -111,7 +113,7 @@ function internQuestion (){
         {
             type: "list",
             message: "Would you like to add another employee?",
-            choices: ["Engineer", "Intern", "No, I don't want to add another employee"],
+            choices: ["Engineer", "Intern", "No"],
             name: "employee",
         }
     ])
@@ -126,8 +128,11 @@ function internQuestion (){
                 return engineerQuestion();
             } else if (employee === "Intern"){
                 return internQuestion();
+            } else {
+                return teamReady();
             }
         });
+        
 };
 
 function engineerQuestion (){
@@ -164,30 +169,23 @@ function engineerQuestion (){
         {
             type: "list",
             message: "Would you like to add another employee?",
-            choices: ["Engineer", "Intern", "No, I don't want to add another employee"],
+            choices: ["Engineer", "Intern", "No"],
             name: "employee",
         }  
     ])
         .then(function({name, id, email, github, employee}){
-            // console.log({name, id, email, github, employee});
-            // console.log(name, id, email, github);
-            const newEngineer = new Engineer (name, id, email, github);
+              this.employee = employee;
+
+              const newEngineer = new Engineer (name, id, email, github);
                 engineerArr.push(newEngineer);
-
-            this.employee = employee;
-
             if (employee === "Engineer"){
                 return engineerQuestion();
             } else if (employee === "Intern"){
                 return internQuestion();
             } else {
-                return;
-                // for (i = 0; i < engineerArr.length; i++){
-                // const newEngineer = new Engineer (name, id, email, github);
-                // engineerArr.push(newEngineer);
-                // console.log(engineerArr);
-                // }
-
+                
+                console.log(engineerArr);
+                console.log(managerArr);
             }
         });
 };
@@ -238,7 +236,9 @@ function generateHTML(){
 
 // appending data to html
 function managerCard({data}){
-    `<div class="card text-white mb-3" style="max-width: 18rem;">
+    let managerHtml = $("#manager");
+
+    let managerDiv = `<div class="card text-white mb-3" style="max-width: 18rem;">
     <div class="card-header bg-primary">
         <p>${name}</p
         <p>${employee}</p>
@@ -250,11 +250,16 @@ function managerCard({data}){
     <li class="list-group-item">${officenumber}</li>
     </ul>
     </div>
-    </div>`
+    </div>`;
+
+    managerHtml.append(managerDiv);
 };
 
 // engineer card
 function engineerCard({data}){
+    let engineerHtml = $("#engineer");
+
+    let engineerDiv = 
     `<div class="card text-white mb-3" style="max-width: 18rem;">
     <div class="card-header bg-primary">
         <p>${name}</p
@@ -267,11 +272,16 @@ function engineerCard({data}){
     <li class="list-group-item">${github}</li>
     </ul>
     </div>
-    </div>`
+    </div>`;
+
+    engineerHtml.append(engineerDiv);
 };
 
 // intern card
 function internCard(){
+    let internHtml = $("#intern");
+
+    let internDiv =
     `<div class="card text-white mb-3" style="max-width: 18rem;">
     <div class="card-header bg-primary">
         <p>${name}</p
@@ -284,17 +294,23 @@ function internCard(){
     <li class="list-group-item">${school}</li>
     </ul>
     </div>
-    </div>`
+    </div>`;
+
+    internHtml.append(internDiv);
 };
 
 
 // make an array to push into it after every input
 // sort array to different jobs 
 
-fs.writeFile("main.html", generateHTML(), function(err){
+function teamReady (){
+    let html = generateHTML();
+fs.writeFile("main.html", html, function(err){
     const outputPath = path.resolve('./output', "output", "main.html");
     if (err){
         throw err
     };
     console.log("Your team is ready!");
 });
+
+};
